@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <!-- Preset CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-vader.css" type="text/css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html" class="logo-container">
+                <img src="assets/img/neymar-logo-blanco.png" alt="logo pumpernic">
+            </a>
+        </div>
+
+        <ul class="enlaces">
+            <li class="enlace">
+                <a href="index.html">
+                    <span>VER</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="get.html">
+                    <span>CONSULTAR</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="post.html">
+                    <span>CREAR</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="put.html">
+                    <span>MODIFICAR</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="delete.html">
+                    <span>ELIMINAR</span>
+                </a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+
+        <section class="form-productos">
+            <h2>Crear producto</h2>
+
+            <form id="postProduct-form" class="form-alta">
+                <label for="nameProd">Nombre</label>
+                <input type="text" name="name" id="nameProd" required>
+
+                <label for="imageProd">Imagen</label>
+                <input type="text" name="image" id="imageProd" required>
+
+                <label for="categoryProd">Categoria</label>
+                <select name="category" id="categoryProd" required>
+                    <option value="food">comida</option>
+                    <option value="drink">bebida</option>
+                </select>
+
+                <label for="priceProd">Precio</label>
+                <input type="number" name="price" id="priceProd" required>
+
+                <div>
+                    <input type="submit" value="Crear producto">
+                </div>
+            </form>
+
+        </section>
+
+        <section class="secccion-productos">
+            <div id="contenedor-productos">
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const contenedorProductos = document.getElementById("contenedor-productos");
+        const postProductForm = document.getElementById("postProduct-form");
+
+        postProductForm.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            const data = Object.fromEntries(formData.entries());
+
+            console.log(data); // {name: 'Muzza', image: 'https://.jpg', category: 'food', price: '123'}
+
+            try {
+                const response = await fetch("http://localhost:3000/api/products", {
+                    method: "POST",
+                    //que tipo de contenido va a resivir el endPoind
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    //en el cuerpo de la peticion le mando el objeto para trasformarlo a JSON
+                    //data -> JSON para el server
+                    body: JSON.stringify(data)
+                });
+                //response 200(ok)
+                console.log(response); // Response {type: 'cors', url: 'http://localhost:3000/api/products', redirected: false, status: 200, ok: true, …}
+
+
+                const result = await response.json(); // Aca obtenemos la respuesta parseada que me devuelve el servidor
+                // Aca transformare la respuesta JSON que devuelve el endpoint: 
+                // message: "Producto creado con exito"
+                alert(result.message);
+                console.log(result.message);
+
+            } catch (error) {
+                console.error("Error al enviar los datos ", error);
+            }
+        })
+    </script>
+
+</body>
+
+</html>

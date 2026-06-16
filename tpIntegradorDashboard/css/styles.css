@@ -1,0 +1,143 @@
+:root {
+    --msg-error-bg: #f8d7da;
+    --msg-error-color: #58151c;
+    --msg-error-border: #f1aeb5;
+}
+body{
+    background-color: #292929;
+}
+
+ul {
+    list-style-type: none;
+}
+span{
+    color:white
+}
+header {
+    background-color: black;
+    border-radius: 15px;
+    padding: 15px;
+    height: 60px;
+}
+
+header, .enlaces {
+    display: flex;
+    /* border: 1px solid; */
+    justify-content: space-between;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    margin: auto;
+}
+
+.logo img {
+    border-radius: 5px;
+}
+
+.enlaces {
+    width: 85%;
+    margin-bottom: 0;
+    align-items: center;
+}
+
+
+/* Contenedores producto */
+.card-producto {
+    display: flex;
+    width: 170px;
+    font-size: 10px;
+    flex-direction: column;
+    align-items: center;
+    height: 170px;
+    justify-content: space-between;
+    background-color: white;
+    color: black;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.card-producto img {
+    width: 80px;
+}
+
+.card-producto h4, .card-producto p {
+    margin: 0;
+}
+
+.card-producto h4 {
+    font-size: 12px;
+}
+
+#contenedor-productos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#contenedor-productos ul {
+    margin-top: 20px;
+    width: 100%;
+    /* border: 1px solid; */
+    padding-left: 0;
+}
+
+.lista-producto {
+    display: flex;
+    align-items: center;
+    /* border: 1px solid; */
+    width: 100%;
+    justify-content: space-around;
+}
+
+.lista-producto img {
+    width: 70px;
+    border-radius: 5px;
+}
+
+.lista-producto p {
+    font-size: 14px;
+}
+
+.lista-producto img, .lista-producto p {
+    margin-bottom: 0;
+}
+
+.form-alta {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
+
+#deleteProduct-button {
+    margin-bottom: 0;
+}
+
+.mensaje-error {
+    color: var(--msg-error-color);
+    background-color: var(--msg-error-bg);
+    border: 1px solid var(--msg-error-border);
+    border-radius: 6px;
+    margin-top: 20px;
+    padding: 15px;
+    width: 100%;
+    text-align: center;
+}
+
+/*TEXTO  : NUESTROS PRODUCTOS*/
+h2{
+    color: unset;
+    text-align: center;
+}
+
+/*BOTON DE CONSULTAR*/
+input[type="submit"], button {
+    background-color: #333333; /* Un gris intermedio que resalta en el fondo oscuro */
+    color: #ffffff;            /* Texto blanco */
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
