@@ -4,7 +4,7 @@ import environments from "./src/api/config/environments.js";//Trae la configurac
 import connection from "./src/api/database/db.js";//Trae la conexión a MySQL.
 import cors from "cors";//Permite que el frontend y backend se comuniquen aunque estén en distintos puertos.
 
-
+//comentario de mas de mas de mas
 //config
 const app = express();//Crea la aplicación Express.
 const PORT = environments.port;//puerto : 3000
