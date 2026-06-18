@@ -17,12 +17,12 @@ app.use(express.json()); // middleware para parsear el JSON de las peticiones PO
 
 //Endpoints
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.send("hola mundo desde Express")
 })
 
 //GET all product
-app.get("/api/products",async (req,res)=>{
+app.get("/api/products", async (req, res) => {
     //con el destructuring separamos resultados(rows) y la metadata (field)
     const [rows, fields] = await connection.query("SELECT * FROM products")
     //rows = info de las filas
@@ -34,7 +34,7 @@ app.get("/api/products",async (req,res)=>{
 })
 
 //GET all user
-app.get("/api/users",async (req,res)=>{
+app.get("/api/users", async (req, res) => {
     const [rows] = await connection.query("SELECT * FROM users")
 
     res.status(200).json({
@@ -48,7 +48,7 @@ app.get("/api/users",async (req,res)=>{
 app.get("/api/products/:id", async (req, res) => {
     //Obtiene el valor que viene en la URL.
     const id = req.params.id;
-    
+
     // El ? en la consulta es un "placeholder", es una medida de seguridad en consultas SQL para prevenir inyecciones SQL
     const [rows] = await connection.query("SELECT * FROM products where products.id = ?", [id]);
     // console.log(rows);
@@ -100,19 +100,26 @@ app.delete("/api/products/:id", async (req, res) => {
 //PUT products
 //nuestra aplicacion eschucharar un peticion get/post/delete/put a la URL("") con un callBack asincrono con un req y una res
 app.put("/api/products", async (req, res) => {
-    //aplicamos destructuring
-    let { id, name, image, price, category } = req.body;
+    try {
+        //aplicamos destructuring
+        const { id, name, image, price, category } = req.body;
+        let sql = `UPDATE products SET nombre = ?, img = ?, precio = ?, categoria = ? WHERE id = ?`;
 
-    let sql = `UPDATE products SET nombre = ?, img = ?, precio = ?, categoria = ? WHERE id = ?`;
+        await connection.query(sql, [name, image, price, category, id]);
 
-    await connection.query(sql, [name, image, price, category, id]);
+        return res.status(200).json({
+            message: "Producto actualizado correctamente"
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "error interno del servidor"
+        })
+    }
 
-    return res.status(200).json({
-        message: "Producto actualizado correctamente"
-    });
 });
 
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`)
 })
