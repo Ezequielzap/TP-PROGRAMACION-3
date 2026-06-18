@@ -25,7 +25,7 @@ app.get("/api/products", async (req, res) => {
 
     try {
         // Optimizacion 1: evitamos traer columnas innecesarias en la consulta SQL (mas eficiente en memoria y red)
-        const sql = "SELECT id, name, price, image FROM products";
+        const sql = "SELECT id, nombre, precio, img FROM products";
 
         const [rows] = await connection.query(sql);// En rows guardamos los resultados de nuestra sentencia SQL
 
@@ -69,55 +69,75 @@ app.get("/api/users", async (req, res) => {
 // GET product by id
 //nuestra aplicacion eschucharar un peticion get/post/delete/put a la URL("") con un callBack asincrono con un req y una res
 app.get("/api/products/:id", async (req, res) => {
-    //Obtiene el valor que viene en la URL.
-    const id = req.params.id;
 
-    // El ? en la consulta es un "placeholder", es una medida de seguridad en consultas SQL para prevenir inyecciones SQL
-    const [rows] = await connection.query("SELECT * FROM products where products.id = ?", [id]);
-    // console.log(rows);
+    try {
+        //Obtiene el valor que viene en la URL.
+        const id = req.params.id;
 
-    res.status(200).json({
-        payload: rows
-    })
+        // El ? en la consulta es un "placeholder", es una medida de seguridad en consultas SQL para prevenir inyecciones SQL
+        // console.log(rows);
+        const sql = "SELECT * FROM products where products.id = ?"
 
+        const [rows] = await connection.query(sql, [id]);
+        console.log(rows)
+        res.status(200).json({
+            payload: rows
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "error interno del navegador"
+        })
+    }
 });
 
 
 // POST product
 //nuestra aplicacion eschucharar un peticion get/post/delete/put a la URL("") con un callBack asincrono con un req y una res
 app.post("/api/products", async (req, res) => {
-
     // Gracias al middleware app.use(express.json()) -> Recibimos un objeto JS ya parseado
-    console.log(req.body);
+    try {
+        // (Destructirin) Extraemos los valores que vienen en el CUERPO (body) de la peticion http (HTTP Request)
+        const { name, image, category, price } = req.body;
 
-    // (Destructirin) Extraemos los valores que vienen en el CUERPO (body) de la peticion http (HTTP Request)
-    const { name, image, category, price } = req.body;
+        const sql = "INSERT INTO products (nombre, img, precio, categoria) VALUES (?, ?, ?, ?)";
+        // Los placeholders "?" nos permiten realizar consultas SQL mas seguras (evitan inyeccion SQL)
+        const [rows] = await connection.query(sql, [name, image, price, category]);
+        //la respuesta es un estado 200(ok) con un JSON
 
-    // Los placeholders "?" nos permiten realizar consultas SQL mas seguras (evitan inyeccion SQL)
-    const sql = "INSERT INTO products (nombre, img, precio, categoria) VALUES (?, ?, ?, ?)";
-
-    await connection.query(sql, [name, image, price, category]);
-    //la respuesta es un estado 200(ok) con un JSON
-    res.status(200).json({
-        message: "Producto creado con exito"
-    });
+        res.status(200).json({
+            message: "Producto creado con exito",
+            insert_id: rows.insertId
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "error interno del navegador"
+        })
+    }
 });
 
 
 // DELETE product
 //nuestra aplicacion eschucharar un peticion get/post/delete/put a la URL("") con un callBack asincrono con un req y una res
 app.delete("/api/products/:id", async (req, res) => {
-    //obtenemos el id
-    const id = req.params.id;
-    //query SQL
-    const sql = "DELETE FROM products WHERE id = ?";
 
-    //establesco la coneccion 
-    await connection.query(sql, [id]);
-
-    res.status(200).json({
-        message: `Producto con id ${id} eliminado correctamente`
-    });
+    try {
+        //obtenemos el id
+        const id = req.params.id;
+        //query SQL
+        const sql = "DELETE FROM products WHERE id = ?";
+        //establesco la coneccion 
+        await connection.query(sql, [id]);
+        res.status(200).json({
+            message: `Producto con id ${id} eliminado correctamente`
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "error interno del navegador"
+        })
+    }
 })
 
 //PUT products
