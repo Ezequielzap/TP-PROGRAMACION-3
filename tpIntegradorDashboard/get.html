@@ -8,7 +8,6 @@
 
     <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
 
-    <!-- Preset CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
@@ -56,111 +55,104 @@
     <main>
 
         <section class="form-productos">
-            <h2>Consultar producto por id: </h2>
+            <h2>Consultar producto por ID</h2>
 
-            <!-- Formulario que manda al servidor un numero de id de producto -->
-            <form id="getProduct-form">
-                <label for="idProd">Id del producto</label>
-                <input type="number" name="id" id="idProd" required>
+            <form id="getProduct-form" class="form-alta">
 
-                <input type="submit" value="Consultar producto">
+                <label for="idProd">ID del producto</label>
+
+                <input
+                    type="number"
+                    name="id"
+                    id="idProd"
+                    required
+                >
+
+                <div>
+                    <input
+                        type="submit"
+                        value="Consultar producto"
+                    >
+                </div>
+
             </form>
 
         </section>
 
         <section class="secccion-productos">
-            <hr>
+
             <div id="contenedor-productos">
-                <!-- 
-                    <ul>
-                        <li class="lista-producto">
-                            <img src="https://pointlaventanita.com/wp-content/uploads/2024/05/chabona.webp" alt="Fernet Cola Chabona">
-                            <p>Id: 41 / Nombre: Fernet Cola Chabona / <strong>Precio: $4200</strong></p>
-                        </li>
-                    </ul>
-                 -->
+
             </div>
+
         </section>
+
     </main>
 
     <script>
-        const contenedorProductos = document.getElementById("contenedor-productos");//Guarda el div donde se mostrará el producto.
-        const getProductForm = document.getElementById("getProduct-form");//Guarda el formulario.
 
-        //Escucha cuando el usuario presiona:
+        const contenedorProductos = document.getElementById("contenedor-productos");
+        const getProductForm = document.getElementById("getProduct-form");
+
         getProductForm.addEventListener("submit", async event => {
-            event.preventDefault(); // Evitamos el envio por defecto de los formularios html
 
-            console.log(event.target); // Apunto al elemento que activo el evento (hago referencia al propio formulario) <form id="getProduct-form">...</form>
+            event.preventDefault();
 
-            // Convertimos los datos de nuestro formulario (event.target) en un objeto FormData
-            //Obtiene los datos del formulario.
+            console.log(event.target);
+
             const formData = new FormData(event.target);
-            console.log(formData); // FormData { id → "41" }
+            console.log(formData);
 
-            // Convierte FormData a objeto JS.
-            // Pasamos de un objeto nativo FormData { id → "41" } a un Object { id: "41" }
             const data = Object.fromEntries(formData.entries());
-            console.log(data); // Object { id: "41" }
-            //Guarda el id.
-            const idProd = data.id;
-            console.log(idProd); // 41
+            console.log(data);
 
+            const idProd = data.id;
+            console.log(idProd);
 
             try {
-                // Hacemos el fetch a /api/products pasandole el valor del id
-                //Llama al backend.
+
                 const response = await fetch(`http://localhost:3000/api/products/${idProd}`);
 
-                // Transformamos la informacion JSON del producto en un objeto JS
-                //Convierte JSON en objeto JS.
                 const data = await response.json();
-                console.log(data.payload[0]); // Aca extraigo directamente el objeto (devuelve un solo objeto en un array de objetos)
 
-                /*  Que trae payload?
-                {
-                    "payload": [
-                        {
-                        "id": 41,
-                        "name": "Fernetazo Chabona",
-                        "image": "https://pointlaventanita.com/wp-content/uploads/2024/05/chabona.webp",
-                        "category": "drink",
-                        "price": "2300.00",
-                        "active": 1
-                        }
-                    ]
-                }
+                console.log(data.payload[0]);
 
-                payload: Array(1)
-                0: {id: 41, name: 'Fernetazo Chabona', image: 'https://pointlaventanita.com/wp-content/uploads/2024/05/chabona.webp', category: 'drink', price: '2300.00', …}
-                */
-
-                // Guardo el objeto en una variable y se la paso a la funcion mostrarProducto para que muestre la url
                 const producto = data.payload[0];
-                console.log(producto); // {id: 41, name: 'Fernetazo Chabona', image: 'https://pointlaventanita.com/wp-content/uploads/2024/05/chabona.webp', category: 'drink', price: '2300.00', …}
+
+                console.log(producto);
 
                 mostrarProducto(producto);
 
-
             } catch (error) {
-                console.error("Errir al obtener el producto: ", error);
+
+                console.error("Error al obtener el producto:", error);
+
+                contenedorProductos.innerHTML = `
+                    <p class="mensaje-error">
+                        Producto no encontrado
+                    </p>
+                `;
             }
         });
 
         function mostrarProducto(producto) {
-            console.table(producto); // Recibimos correctamente el producto en esta funcion
 
             let htmlProducto = `
                 <ul>
                     <li class="lista-producto">
                         <img src="${producto.img}" alt="${producto.nombre}">
-                        <p>Id: ${producto.id} / Nombre: ${producto.nombre} / <strong>Precio: $${producto.precio}</strong></p>
+                        <p>
+                            Id: ${producto.id}
+                            / Nombre: ${producto.nombre}
+                            / <strong>Precio: $${producto.precio}</strong>
+                        </p>
                     </li>
                 </ul>
             `;
 
             contenedorProductos.innerHTML = htmlProducto;
         }
+
     </script>
 
 </body>
