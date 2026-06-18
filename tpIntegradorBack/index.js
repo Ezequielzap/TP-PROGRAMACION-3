@@ -23,15 +23,39 @@ app.get("/", (req, res) => {
 
 //GET all product
 app.get("/api/products", async (req, res) => {
-    //con el destructuring separamos resultados(rows) y la metadata (field)
-    const [rows, fields] = await connection.query("SELECT * FROM products")
-    //rows = info de las filas
-    //fields = info de los campos
 
-    res.status(200).json({
-        payload: rows
-    })
-})
+    try {
+        // Optimizacion 1: evitamos traer columnas innecesarias en la consulta SQL (mas eficiente en memoria y red)
+        const sql = "SELECT id, name, price, image FROM products";
+
+        const [rows] = await connection.query(sql);// En rows guardamos los resultados de nuestra sentencia SQL
+
+        //rows = info de las filas
+        //fields = info de los campos
+
+        // Optimizacion 2: Respuesta 404 si la BBDD no devuelve productos
+        if (rows.length === 0) {
+            return res.status(404).json({
+                message: "No se encontraron productos"
+            })
+        }
+        res.status(200).json({
+
+            ///////////////////
+            // Optimizacion 3: Opcional, podemos devolver la cantidad de productos
+            total: rows.length,
+            payload: rows
+        });
+    } catch (error) {
+        console.log("Error obteniendo productos: ", error.message);
+
+        // Optimizacion 4: Si fallo la conexion a la BBDD, tardo demasiado, la tabla no existe o hay error de sintaxis
+        res.status(500).json({
+            message: "Error interno al obtener productos"
+        })
+    }
+
+});
 
 //GET all user
 app.get("/api/users", async (req, res) => {
