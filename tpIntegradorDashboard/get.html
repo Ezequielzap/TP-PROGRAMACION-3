@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -93,13 +93,19 @@
 
         const contenedorProductos = document.getElementById("contenedor-productos");
         const getProductForm = document.getElementById("getProduct-form");
+        const urlBase = "http://localhost:3000/api/products";
 
+        //mostramos los mensajes de error Visualmente
+        function mostrarError(message){
+            contenedorProductos.innerHTML =`
+                <p class ="mensaje mensaje-error">${message}</p>
+            `;
+        }
         getProductForm.addEventListener("submit", async event => {
-
             event.preventDefault();
 
             console.log(event.target);
-
+            /*
             const formData = new FormData(event.target);
             console.log(formData);
 
@@ -108,12 +114,30 @@
 
             const idProd = data.id;
             console.log(idProd);
+            */
+
+            //optimizacion1 : podemos saltarnos el formData
+            const idProd = event.target.idProd.value.trim();
+
+            //optimizacion 2: tambien filtramos en el cliente en caso de que no hay aun id valido
+            if(!idProd){
+                mostrarError("ingresa un ID valido");
+                return;
+            }
 
             try {
+                //optimizacion 3 : evitamos hardcodear la URL guardandola en una variable
+                //gracias a la API fetch , realizo una peticion HTTP GET a mi propia api rest al endpint GET/api/products
+                const response = await fetch(`${urlBase}/${idProd}`);
 
-                const response = await fetch(`http://localhost:3000/api/products/${idProd}`);
-
+                //transformamos la informacion en JSON del producto en un objeto JS
                 const data = await response.json();
+
+                //Optimizacion 4: evaluamos si el servidor respondio un OK
+                if(!response.ok){
+                    mostrarError(data.message)
+                    return;
+                }
 
                 console.log(data.payload[0]);
 
@@ -124,14 +148,9 @@
                 mostrarProducto(producto);
 
             } catch (error) {
-
                 console.error("Error al obtener el producto:", error);
+                mostrarError("error","Error de conexion con el servidor")
 
-                contenedorProductos.innerHTML = `
-                    <p class="mensaje-error">
-                        Producto no encontrado
-                    </p>
-                `;
             }
         });
 

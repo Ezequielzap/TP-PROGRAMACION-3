@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <!-- Preset CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html" class="logo-container">
+                <img src="assets/img/neymar-logo-blanco.png" alt="logo pumpernic">
+            </a>
+        </div>
+
+        <ul class="enlaces">
+            <li class="enlace">
+                <a href="index.html">
+                    <span>VER</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="get.html">
+                    <span>CONSULTAR</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="post.html">
+                    <span>CREAR</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="put.html">
+                    <span>MODIFICAR</span>
+                </a>
+            </li>
+
+            <li class="enlace">
+                <a href="delete.html">
+                    <span>ELIMINAR</span>
+                </a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+
+        <section class="form-productos">
+            <h2>Consultar producto por id: </h2>
+
+            <form id="getProduct-form">
+                <label for="idProd">Id del producto</label>
+                <input type="number" name="idProd" id="idProd" required>
+
+                <input type="submit" value="Consultar producto">
+            </form>
+        </section>
+
+        <section class="secccion-productos">
+            <hr>
+            <div id="contenedor-productos"></div>
+            <div id="contenedor-form"></div>
+        </section>
+    </main>
+
+    <script>
+        const contenedorProductos = document.getElementById("contenedor-productos");
+        const getProductForm = document.getElementById("getProduct-form");
+        const contenedorForm = document.getElementById("contenedor-form");
+        const urlBase = "http://localhost:3000/api/products";
+
+        //mostramos los mensajes de exito o error Visualmente
+        function mostrarMensaje(type, message) {
+            contenedorProductos.innerHTML = `
+                <p class ="mensaje mensaje-${type}">${message}</p>
+            `;
+        }
+
+        function mostrarListaErrores(array) {
+            let htmlErrores = "";
+            array.forEach(error => {
+                htmlErrores += `<p class="mensaje mensaje-error">${error}</p>`
+            });
+            contenedorForm.innerHTML = htmlErrores;
+        }
+
+
+        getProductForm.addEventListener("submit", async event => {
+            event.preventDefault(); //Evitamos el envio por defecto HTML del formulario
+
+            // Extraemos el id del producto
+            const idProd = event.target.idProd.value.trim();
+
+            // Optimizacion 2: Tambien filtramos en el cliente en caso de que no haya un id valido
+            if (!idProd) {
+                mostrarError("ingresa un ID valido");
+                return;
+            }
+
+            try {
+                // Vamos a hacer el fetch a una URL personalizada
+                const response = await fetch(`${urlBase}/${idProd}`);
+                console.log(response);
+
+                // Procesamos los datos que devuelve el servidor
+                const datos = await response.json();
+
+                //Optimizacion 4: evaluamos si el servidor respondio un OK
+                if (!response.ok) {
+                    mostrarMensaje("error", datos.message)
+                    return;
+                }
+                console.log(datos);
+
+
+                const producto = datos.payload[0];
+
+                console.log(producto);
+                /* {
+                    "id": 41,
+                    "name": "Fernet Cola Chabona",
+                    "image": "https://pointlaventanita.com/wp-content/uploads/2024/05/chabona.webp",
+                    "category": "drink",
+                    "price": "4300.00",
+                    "active": 1
+                }*/
+
+                renderizarProducto(producto);
+
+            } catch (error) {
+                console.error("Error al obtener el producto");
+                mostrarMensaje("error", "Error de conexion con el servidor")
+            }
+        });
+
+        function renderizarProducto(producto) {
+            let htmlProducto = `
+            <ul>
+                <li class="lista-producto">
+                    <img src="${producto.img}" alt="${producto.nombre}">
+                    <p>Id: ${producto.id} / Nombre: ${producto.nombre} / <strong>Precio: $${producto.precio}</strong></p>
+                    <input type="button" id="updateProduct-button" value="Actualizar Producto">
+                </li>
+            </ul>
+            `;
+
+            contenedorProductos.innerHTML = htmlProducto;
+
+            // Otra opcion seria agregando el atributo onclick="nombrefuncion"
+
+            const deleteProductButton = document.getElementById("updateProduct-button");
+
+            deleteProductButton.addEventListener("click", event => {
+                event.stopPropagation();
+
+                const confirmacion = confirm("Querés Actualizar este producto?");
+
+                if (!confirmacion) {
+                    alert("Eliminacion cancelada");
+                } else {
+                    crearFormularioPut(event, producto);
+                }
+            });
+        }
+
+        // Funcion para realizar una operacion delete
+        async function crearFormularioPut(event, producto) {
+
+            event.stopPropagation();
+
+            let updateFormHTML = `
+                <hr>
+                <form id="updateProduct-form" class="form-alta">
+                    <input type="hidden" name="id" value="${producto.id}">
+
+                    <label for="nameProd">Nombre</label>
+                    <input type="text" name="name" id="nameProd" value="${producto.nombre}" required>
+    
+                    <label for="imageProd">Imagen</label>
+                    <input type="text" name="image" id="imageProd" value="${producto.img}" required>
+    
+                    <label for="categoryProd">Categoria</label>
+                    <select name="category" id="categoryProd" required>
+                        <option value="Pelota">Pelota</option>
+                        <option value="Botin">Botin</option>
+                    </select>
+    
+                    <label for="priceProd">Precio</label>
+                    <input type="number" name="price" id="priceProd" value="${producto.precio}" required>
+
+                    <!-- Aca podemos hacer la baja logica que pide el TP -->
+                    <label for="activeProd">Activo</label>
+                    <select name="active" id="activeProd">
+                        <option value="1">activo</option>
+                        <option value="0">inactivo</option>
+                    </select>
+                    
+                    <div>
+                        <input type="submit" value="Actualizar producto">
+                    </div>
+                </form>
+            `;
+
+            contenedorForm.innerHTML = updateFormHTML;
+
+            const updateProductForm = document.getElementById("updateProduct-form");
+
+            //capturamos el evento de envio de nuestro formulario creado dinamicamente
+            updateProductForm.addEventListener("submit", event => {
+                actualizarProducto(event);//hacemos la llamada para enviar estos datos
+            })
+        }
+
+        //Enviamos los datos del formulario al servidor
+        async function actualizarProducto(event) {
+            event.preventDefault();//evitamos el envio por defectos del formulario
+
+            //recolectamos los datos del formulario en un objeto  formData (no podemos hacerle stringify())
+            const formData = new FormData(event.target);
+            //parseamos este obj formData a un obj JS para poder enviarlo como JSON con JSON
+            const data = Object.fromEntries(formData.entries());
+            
+            data.price = Number(data.price);
+
+
+            try {
+                const response = await fetch("http://localhost:3000/api/products/", {
+                    method: "PUT",
+                    headers: {
+                        "content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log(response);
+
+                const result = await response.json()
+
+                //optimizacion : manejamos una respueta no ok del servidor
+                if (!response.ok) {
+
+                    console.log(`Lista de errores: \n ${result.listaErrores.length}`);
+                    contenedorForm.innerHTML = "";
+                    // TO DO: Crear mostrarListaErrores
+                    if (result.listaErrores) {
+                        mostrarListaErrores(result.listaErrores);
+                    }
+                    mostrarMensaje("error", result.message);
+                    console.log(result);
+                    result.listaErrores.forEach(error => {
+                        console.log(error);
+                    })
+                    console.log(result.listaErrores)
+                    return;
+
+                }
+
+                getProductForm.innerHTML = "";
+                contenedorForm.innerHTML = "";
+
+                console.log(result.message);
+                mostrarMensaje("exito", result.message);
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+
+    </script>
+
+</body>
+
+</html>

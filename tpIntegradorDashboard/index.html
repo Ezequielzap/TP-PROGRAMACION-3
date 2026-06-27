@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,14 +71,34 @@
     <script>
         const contenedorProductos = document.getElementById("contenedor-productos");
 
-        const url = "http://localhost:3000/api/products/";
+        const urlBase = "http://localhost:3000/api/products/";
+
+        //mostramos los mensajes de error Visualmente
+        function mostrarError(message){
+            contenedorProductos.innerHTML =`
+                <p class ="mensaje mensaje-error">${message}</p>
+            `;
+        }
 
         async function obtenerProductos() {
             try {
 
-                const response = await fetch(url);
+                //gracias a la API fecht , realizo una peticion HTTP Get a mi propia api rest al endpoint get/api/products
+                const response = await fetch(urlBase);
+
+                console.log(response);//Aca podemos chequear el booleano que vamos a usar en el if de abajo
+
+                //una vez que recibo todo el JSON , lo parseo con resonde.json()
                 const data = await response.json();
                 
+                //los codigos 2000 llevan un booleano ok: true 200
+                if(!response.ok){
+                    alert(data.message);
+                    mostrarError(data.message);
+                    return;
+                }
+
+                //extraigo los productos que vienen en la clave payload
                 const productos = data.payload;
                 console.log(productos);
                 
@@ -86,6 +106,7 @@
 
             } catch (error) {
                 console.error(error);
+                mostrarError("Error de conexion con el servidor")
             }
 
         }

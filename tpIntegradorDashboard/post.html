@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -67,8 +67,8 @@
 
                 <label for="categoryProd">Categoria</label>
                 <select name="category" id="categoryProd" required>
-                    <option value="food">comida</option>
-                    <option value="drink">bebida</option>
+                    <option value="Pelota">Pelota</option>
+                    <option value="Botin">Botin</option>
                 </select>
 
                 <label for="priceProd">Precio</label>
@@ -89,9 +89,39 @@
     </main>
 
     <script>
+
         const contenedorProductos = document.getElementById("contenedor-productos");
         const postProductForm = document.getElementById("postProduct-form");
+        const urlBase = "http://localhost:3000/api/products";
 
+        //optimizacion 1 : validacion previa de los datos en el cliente
+        function validarFormulario(data) {
+            const errores = [];
+
+            if (!data.name || data.name.trim().length < 2) {
+                errores.push("Asegurate de incluir todos los campos");
+            }
+
+            if (!data.price || isNaN(data.price) || Number(data.pice) < 0) {
+                errores.push("El precio debe ser un numero mayor a 0")
+            }
+
+            if (!data.category) {
+                errores.push("Categoria Invalida")
+            }
+
+            return errores;
+        }
+
+
+        //Optimizacion 2: mostramos los mensajes de exito o error Visualmente
+        function mostrarMensaje(type, message) {
+            contenedorProductos.innerHTML = `
+                <p class ="mensaje mensaje-${type}">${message}</p>
+            `;
+        }
+
+        //gestionamos el envio de datos del formulario        
         postProductForm.addEventListener("submit", async event => {
             event.preventDefault();
 
@@ -99,33 +129,63 @@
 
             const data = Object.fromEntries(formData.entries());
 
+            //optimizacion 3: parseamos price antes de enviarlo , por que el formData devuelve como string
+            data.price = Number(data.price);
+
             console.log(data); // {name: 'Muzza', image: 'https://.jpg', category: 'food', price: '123'}
 
+            //Optimizacion 4: llamamos a la funcion validar los datos del formulario 
+            const errores = validarFormulario(data);
+
+            //si hay errores mostramos mensaje de error y terminamos con el return
+            if (errores.length > 0) {
+                mostrarMensaje("error", errores.join(" "));//opcionalmenete mandaremos tambiene el numero de errores y creamos un parrafo por errores
+                return;
+            }
+
             try {
-                const response = await fetch("http://localhost:3000/api/products", {
+                const response = await fetch(urlBase, {
                     method: "POST",
                     //que tipo de contenido va a resivir el endPoind
                     headers: {
                         "Content-Type": "application/json"
                     },
+
                     //en el cuerpo de la peticion le mando el objeto para trasformarlo a JSON
                     //data -> JSON para el server
                     body: JSON.stringify(data)
                 });
+
                 //response 200(ok)
                 console.log(response); // Response {type: 'cors', url: 'http://localhost:3000/api/products', redirected: false, status: 200, ok: true, …}
 
 
                 const result = await response.json(); // Aca obtenemos la respuesta parseada que me devuelve el servidor
-                // Aca transformare la respuesta JSON que devuelve el endpoint: 
-                // message: "Producto creado con exito"
-                alert(result.message);
+
+                //Optimizacion 5: manejamos respuesta no ok del servidor
+                if (!response.ok) {
+                    let mensaje = "";
+                    //En caso de recibir el 400 del middleware validateProduct (envia string = array errores)
+                    if(result.errores){
+                        mensaje = result.message + result.errores.join("\n");
+                    }else{
+                        mensaje = result.mensaje;
+                    }
+
+                    mostrarMensaje("error",mensaje);
+                    return;
+                }
+
+                mostrarMensaje("exito",result.message);
                 console.log(result.message);
 
             } catch (error) {
                 console.error("Error al enviar los datos ", error);
+                mostrarMensaje("error","Error al procesar la solicitud")
             }
+
         })
+
     </script>
 
 </body>

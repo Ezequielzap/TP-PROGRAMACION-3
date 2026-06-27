@@ -1,7 +1,16 @@
+:root {
+    --msg-error-bg: #f8d7da;
+    --msg-error-color: #58151c;
+    --msg-error-border: #f1aeb5;
+    --msg-exito-bg: #d1e7dd;
+    --msg-exito-color: #0a3622;
+    --msg-exito-border: #a3cfbb;
+}
+
 /* ==================
    RESET
 ================== */
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -17,28 +26,28 @@
    GENERALES
 ================== */
 
-body{
+body {
     background-color: #292929;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     padding: 15px;
 }
 
-main{
+main {
     width: 100%;
 }
 
-a{
+a {
     text-decoration: none;
     color: white;
 }
 
-ul{
+ul {
     list-style: none;
 }
 
-span{
-    color:white;
+span {
+    color: white;
 }
 
 /* ==================
@@ -56,28 +65,28 @@ header {
     align-items: center;
 }
 
-.logo{
+.logo {
     width: 80px;
 }
 
-.logo img{
+.logo img {
     width: 100%;
     height: auto;
     display: block;
 }
 
-.enlaces{
+.enlaces {
     display: flex;
     align-items: center;
     gap: 50px;
 }
 
-.enlace a{
+.enlace a {
     font-weight: bold;
     transition: 0.3s;
 }
 
-.enlace a:hover{
+.enlace a:hover {
     color: #cfcfcf;
 }
 
@@ -85,7 +94,7 @@ header {
    TITULOS
 ================== */
 
-h2{
+h2 {
     text-align: center;
     margin: 30px 0;
     color: white;
@@ -96,14 +105,14 @@ h2{
    PRODUCTOS
 ================== */
 
-#contenedor-productos{
+#contenedor-productos {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
 }
 
-.card-producto{
+.card-producto {
     background-color: white;
     color: black;
 
@@ -122,18 +131,18 @@ h2{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.card-producto img{
+.card-producto img {
     width: 100px;
     height: 100px;
     object-fit: contain;
 }
 
-.card-producto h4{
+.card-producto h4 {
     text-align: center;
     font-size: 14px;
 }
 
-.card-producto p{
+.card-producto p {
     font-size: 13px;
 }
 
@@ -141,7 +150,7 @@ h2{
    LISTAS GET
 ================== */
 
-.lista-producto{
+.lista-producto {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -152,16 +161,17 @@ h2{
 
     border-radius: 10px;
 
+    margin-top: 15px;
     margin-bottom: 15px;
     padding: 15px;
 }
 
-.lista-producto img{
+.lista-producto img {
     width: 70px;
     border-radius: 5px;
 }
 
-.lista-producto p{
+.lista-producto p {
     margin: 0;
 }
 
@@ -169,16 +179,21 @@ h2{
    FORMULARIOS
 ================== */
 
-.form-alta{
+form,.form-alta {
     display: flex;
     flex-direction: column;
-    width: 500px;
-    margin: auto;
+    width: 100%;
+    /* Permite que sea responsive en pantallas chicas */
+    max-width: 500px;
+    /* No deja que se estire más de 500px en pantallas grandes */
+    margin: 40px auto;
+    /* Lo centra horizontalmente (auto) y le da margen arriba/abajo */
 }
+
 
 input,
 select,
-textarea{
+textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -192,7 +207,7 @@ textarea{
 
 input:focus,
 select:focus,
-textarea:focus{
+textarea:focus {
     outline: 2px solid #777;
 }
 
@@ -201,7 +216,7 @@ textarea:focus{
 ================== */
 
 button,
-input[type="submit"]{
+input[type="submit"] {
     background-color: #333333;
     color: white;
 
@@ -216,50 +231,58 @@ input[type="submit"]{
 }
 
 button:hover,
-input[type="submit"]:hover{
+input[type="submit"]:hover {
     background-color: #4a4a4a;
 }
 
-/* ==================
-   MENSAJES
-================== */
 
-.mensaje-error{
-    color: var(--msg-error-color);
-    background-color: var(--msg-error-bg);
-
-    border: 1px solid var(--msg-error-border);
-    border-radius: 6px;
-
-    margin-top: 20px;
-    padding: 15px;
-
-    width: 100%;
-    text-align: center;
-}
 
 /* ==================
    RESPONSIVE
 ================== */
 
-@media(max-width: 768px){
+@media(max-width: 768px) {
 
-    header{
+    header {
         flex-direction: column;
         gap: 20px;
     }
 
-    .enlaces{
+    .enlaces {
         flex-wrap: wrap;
         justify-content: center;
         gap: 20px;
     }
 
-    .card-producto{
+    .card-producto {
         width: 150px;
     }
 
-    .form-alta{
+    .form-alta {
         width: 100%;
     }
+}
+
+
+/* ==================
+       ERRORES
+================== */
+.mensaje {
+    border-radius: 6px;
+    margin-top: 20px;
+    padding: 15px;
+    width: 100%;
+    text-align: center;
+}
+
+.mensaje-error {
+    color: var(--msg-error-color);
+    background-color: var(--msg-error-bg);
+    border: 1px solid var(--msg-error-border);
+}
+
+.mensaje-exito {
+    color: var(--msg-exito-color);
+    background-color: var(--msg-exito-bg);
+    border: 1px solid var(--msg-exito-border);
 }
