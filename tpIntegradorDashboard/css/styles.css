@@ -183,11 +183,9 @@ form,.form-alta {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* Permite que sea responsive en pantallas chicas */
     max-width: 500px;
-    /* No deja que se estire más de 500px en pantallas grandes */
     margin: 40px auto;
-    /* Lo centra horizontalmente (auto) y le da margen arriba/abajo */
+
 }
 
 
