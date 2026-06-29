@@ -99,10 +99,10 @@
             const errores = [];
 
             if (!data.name || data.name.trim().length < 2) {
-                errores.push("Asegurate de incluir todos los campos");
+                errores.push("El nombre debe tener al menos 2 caracteres");
             }
 
-            if (!data.price || isNaN(data.price) || Number(data.pice) < 0) {
+            if (!data.price || isNaN(data.price) || Number(data.price) < 0) {
                 errores.push("El precio debe ser un numero mayor a 0")
             }
 
@@ -120,6 +120,17 @@
                 <p class ="mensaje mensaje-${type}">${message}</p>
             `;
         }
+
+            function mostrarListaErrores(array) {
+                let htmlErrores = "";
+
+                array.forEach(error => {
+                    htmlErrores += `<p class="mensaje mensaje-error">${error}</p>`;
+                });
+
+                contenedorProductos.innerHTML = htmlErrores;
+            }
+
 
         //gestionamos el envio de datos del formulario        
         postProductForm.addEventListener("submit", async event => {
@@ -139,7 +150,8 @@
 
             //si hay errores mostramos mensaje de error y terminamos con el return
             if (errores.length > 0) {
-                mostrarMensaje("error", errores.join(" "));//opcionalmenete mandaremos tambiene el numero de errores y creamos un parrafo por errores
+                mostrarListaErrores(errores);
+                //opcionalmenete mandaremos tambiene el numero de errores y creamos un parrafo por errores
                 return;
             }
 
@@ -166,22 +178,22 @@
                 if (!response.ok) {
                     let mensaje = "";
                     //En caso de recibir el 400 del middleware validateProduct (envia string = array errores)
-                    if(result.errores){
+                    if (result.errores) {
                         mensaje = result.message + result.errores.join("\n");
-                    }else{
+                    } else {
                         mensaje = result.mensaje;
                     }
 
-                    mostrarMensaje("error",mensaje);
+                    mostrarMensaje("error", mensaje);
                     return;
                 }
 
-                mostrarMensaje("exito",result.message);
+                mostrarMensaje("exito", result.message);
                 console.log(result.message);
 
             } catch (error) {
                 console.error("Error al enviar los datos ", error);
-                mostrarMensaje("error","Error al procesar la solicitud")
+                mostrarMensaje("error", "Error al procesar la solicitud")
             }
 
         })
