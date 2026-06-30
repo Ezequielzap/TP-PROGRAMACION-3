@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol Heritage</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- Pantalla de Login -->
+
+    <div id="pantalla-login" class="login-overlay">
+        <div class="login-caja">
+            <img src="assets/logo.heritage.png" alt="Logo Heritage" class="login-logo">
+            <h2>Bienvenido a Futbol Heritage</h2>
+            <p>Ingresa tu nombre para acceder al catálogo:</p>
+            <form id="formulario-login">
+                <input type="text" id="input-login-nombre" placeholder="Tu nombre aquí..." required autocomplete="off">
+                <button type="submit" class="btn-ingresar">Ingresar a la Tienda</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+     
+    <div id="contenido-tienda" style="display: none;">
+        <header>
+            <div class="logo-container">
+                <img src="assets/logo.heritage.png" alt="Logo Heritage">
+                <div>
+                    <h1>Futbol Heritage</h1>
+                    <p class="integrantes">Usuario: <span id="nombreUsuarioHeader">Cargando...</span></p>
+                    <button id="btn-cerrar-sesion" class="btn-cerrar">Cerrar Sesión</button>
+                </div>
+            </div>
+            <nav class="nav-productos">
+                <button onclick="filtrarPorCategoria('Todos')" class="btn-filtro">Todos</button>
+                <button onclick="filtrarPorCategoria('Botines')" class="btn-filtro">Botines</button>
+                <button onclick="filtrarPorCategoria('Pelotas')" class="btn-filtro">Pelotas</button>
+            </nav>
+        </header>
+
+        <main>
+            <h2 class="seccion-titulo">Catálogo de Productos</h2>
+            <div id="contenedor-productos" class="grid-productos"></div>
+            
+            
+
+            <section class="carrito-seccion">
+                <h2 class="seccion-titulo">Tu Carrito de Compras</h2>
+                <div class="carrito-container">
+                    <div id="lista-carrito"></div>
+                    <h3 id="total-precio">Total: $0</h3>
+                    <button class="btn-finalizar">FINALIZAR COMPRA</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

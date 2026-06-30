@@ -1,0 +1,390 @@
+/* ==========================================================================
+   RESET GENERAL Y CONFIGURACIÓN BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-image: url('https://img.magnific.com/fotos-premium/fondo-rojo-bolas-futbol-fondo-roja_1293074-28809.jpg?semt=ais_hybrid&w=740&q=80');
+    background-size: cover;         /* Fuerza a la imagen a cubrir toda la pantalla */
+    background-position: center;    /* Centra la imagen para que no se corte lo importante */
+    background-repeat: no-repeat;  /* Evita que la imagen se duplique como mosaico */
+    background-attachment: fixed;   /* Hace que el contenido haga scroll y el fondo quede fijo (efecto pro) */
+    color: white;
+}
+
+/* ==========================================================================
+   HEADER Y BARRA DE NAVEGACIÓN
+   ========================================================================== */
+header {
+    background-color: black;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid green;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-container img {
+
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.logo-container h1 {
+    /*color nombre futbol heritage en mian*/
+
+    font-size: 22px;
+    font-weight: bold;
+    color: greenyellow;
+}
+
+.integrantes { 
+    /*nombre de usuario*/
+    color: white;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.btn-filtro {
+    /*botones para filtrar por pelota,botin*/
+    
+    background-color: #1e1e1e;
+    color: #ffffff; /* color de las palabras*/
+    border: 1px solid red; /* le ponemos un pequeño borde rojo*/
+    padding: 8px 16px; /* los hacemos un poco mas grandes*/
+    font-size: 13px; /* tamanio de la fuente*/
+    font-weight: bold;
+    border-radius: 4px; /* las estilizamos un poco mas*/
+    cursor: pointer; /* mostramos el cursor cuando pasemos encima de ellas*/
+    
+}
+
+.btn-filtro:hover {
+    /* escencial para estilizar nuestra interaccion cuando el mouse pase por encima de los botones*/
+
+    background-color: red; /* color que tomara el boton al estar encima de el*/
+    color: #000000; /* color de las letras al pasar encima de el*/
+}
+
+/* ==========================================================================
+   CONFIGURACIÓN DE CONTENEDORES Y GRILLA
+   ========================================================================== */
+main {
+    width: 100%;
+    padding: 20px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.seccion-titulo {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
+
+.separador-seccion {
+    border: 0;
+    height: 1px;
+    background: #333333;
+    margin: 50px 0;
+}
+
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.tarjeta-producto {
+    background-color: #1e1e1e;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tarjeta-producto:hover {
+    transform: translateY(-4px);
+    border-color: #00ff66;
+}
+
+.producto-imagen {
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 12px;
+}
+
+.tarjeta-producto h3 {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.tarjeta-producto .precio {
+    font-size: 16px;
+    color: #00ff66;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.btn-agregar, .btn-finalizar {
+    background-color: #00ff66;
+    color: #000000;
+    border: none;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+}
+
+.btn-agregar:hover, .btn-finalizar:hover {
+    background-color: #00cc55;
+}
+
+/* Mensajes informativos y de error en el catálogo */
+
+.mensaje-vacio {
+    text-align: center;
+    color: #666666;
+    font-style: italic;
+    grid-column: 1 / -1; 
+}
+
+.error-conexion {
+    color: #ff3333;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+    grid-column: 1 / -1;
+}
+
+/* ==========================================================================
+   DISEÑO DEL CARRITO INTEGRADO Y ESTADOS VACÍOS
+   ========================================================================== */
+.carrito-seccion {
+    width: 100%;
+}
+
+.carrito-container {
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.tarjeta-producto-carrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #121212;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #2a2a2a;
+}
+
+.info-item-carrito h4 {
+    font-size: 15px;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.info-item-carrito p {
+    font-size: 13px;
+    color: #aaaaaa;
+}
+
+.controles-cantidad-carrito {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.controles-cantidad-carrito button {
+    background-color: #222222;
+    color: #ffffff;
+    border: 1px solid #444444;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.controles-cantidad-carrito button:hover {
+    background-color: #00ff66;
+    color: #000000;
+    border-color: #00ff66;
+}
+
+.controles-cantidad-carrito .btn-eliminar-item {
+    background-color: #ff3333;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.controles-cantidad-carrito .btn-eliminar-item:hover {
+    background-color: #cc0000;
+}
+
+#total-precio {
+    text-align: right;
+    font-size: 20px;
+    color: #00ff66;
+    margin: 20px 0;
+}
+
+.carrito-vacio-contenedor {
+    text-align: center;
+    padding: 20px;
+}
+
+.carrito-vacio-texto {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   6. PANTALLA DE LOGIN INTEGRADA
+   ========================================================================== */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0c0c0c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.login-caja {
+    background-color: #1e1e1e;
+    padding: 40px;
+    border-radius: 8px;
+    border: 2px solid #00ff66;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+}
+
+.login-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.login-caja h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.login-caja p {
+    color: #aaaaaa;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+#input-login-nombre {
+    width: 100%;
+    padding: 12px;
+    background-color: #121212;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 15px;
+    margin-bottom: 20px;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.2s ease;
+}
+
+#input-login-nombre:focus {
+    border-color: #00ff66;
+}
+
+.btn-ingresar {
+    background-color: #00ff66;
+    color: #000000;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+}
+
+.btn-ingresar:hover {
+    background-color: #00cc55;
+}
+
+.btn-cerrar {
+    background-color: #dc3545; 
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-cerrar:hover {
+    background-color: #c82333; /* al pasar el mouse */
+}
+
+/* ==========================================================================
+   5. RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    main {
+        padding: 20px 15px;
+    }
+}
